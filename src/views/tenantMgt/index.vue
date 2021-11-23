@@ -2,7 +2,7 @@
  * @Author: crli
  * @Date: 2021-10-15 09:27:35
  * @LastEditors: crli
- * @LastEditTime: 2021-10-22 09:48:50
+ * @LastEditTime: 2021-11-23 16:12:44
  * @Description: file content
 -->
 <template>
@@ -89,7 +89,7 @@ import { onMounted, getCurrentInstance, ref, reactive } from 'vue'
 import appListDlg from './components/appListDlg'
 import tenantDlg from './components/tenantDlg'
 let { proxy }: any = getCurrentInstance()
-
+import { dddddd } from '@/api/user'
 //响应式数据、props、emit 定义
 let listQuery = reactive({
   tenantName: '',
@@ -149,15 +149,17 @@ let getStatusName = (v: string) => {
   return v === '1' ? '正常' : '锁定'
 }
 let getList = () => {
-  let reqConfig = {
-    url: '/xxxxx/xx',
-    method: 'post',
-    data: listQuery
-  }
-  proxy.$axiosReq(reqConfig).then((resData: any) => {
-    tableData.value = resData.data?.records
-    total.value = resData.data?.total
+  dddddd({}).then((resData: any) => {
   })
+  // let reqConfig = {
+  //   url: '/xxxxx/xx',
+  //   method: 'post',
+  //   data: listQuery
+  // }
+  // proxy.$axiosReq(reqConfig).then((resData: any) => {
+  //   tableData.value = resData.data?.records
+  //   total.value = resData.data?.total
+  // })
   // let reqConfig = {
   //   url: '/xxxxx/xx',
   //   method: 'get',

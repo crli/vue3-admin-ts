@@ -7,7 +7,7 @@ let requestData: any
 let loadingE: any
 
 const service: any = axios.create({
-  // baseURL: process.env.VUE_APP_BASE_URL,
+  baseURL: '',
   // timeout: 30000 // 超时时间
 })
 // 请求拦截
@@ -131,7 +131,7 @@ export default function khReqMethod({
     isUploadFile: isUploadFile ?? false,
     isDownLoadFile: isDownLoadFile ?? false,
     isAlertErrorMsg: isAlertErrorMsg,
-    baseURL: baseURL ?? import.meta.env.VITE_APP_BASE_URL,
+    baseURL: '',
     timeout: timeout ?? 15000
   })
 }

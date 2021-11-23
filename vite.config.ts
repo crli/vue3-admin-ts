@@ -2,7 +2,7 @@
  * @Author: crli
  * @Date: 2021-10-13 15:50:46
  * @LastEditors: crli
- * @LastEditTime: 2021-10-21 16:18:19
+ * @LastEditTime: 2021-11-23 16:07:44
  * @Description: file content
  */
 import path, { resolve } from 'path'
@@ -10,11 +10,12 @@ import vue from '@vitejs/plugin-vue'
 import legacy from '@vitejs/plugin-legacy'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import viteSvgIcons from 'vite-plugin-svg-icons'
+import { loadEnv } from 'vite'
 //mock
 import { viteMockServe } from 'vite-plugin-mock'
 import setting from './src/settings'
 const prodMock = setting.openProdMock
-export default ({ command }: any) => {
+export default ({ command, mode }: any) => {
   return {
     base: './',
     define: {
@@ -30,10 +31,10 @@ export default ({ command }: any) => {
       cors: true, // 类型： boolean | CorsOptions 为开发服务器配置 CORS。默认启用并允许任何源
       proxy: {
         // 类型： Record<string, string | ProxyOp 为开发服务器配置自定义代理规则
-        '/api': {
-          target: 'http://jsonplaceholder.typicode.com',
+        [loadEnv(mode, process.cwd()).VITE_APP_BASE_URL]: {
+          target: 'http://172.22.22.222:2222/manager',
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, '')
+          rewrite: (path) => path.replace(new RegExp('^' + loadEnv(mode, process.cwd()).VITE_APP_BASE_URL), '')
         },
       }
     },
