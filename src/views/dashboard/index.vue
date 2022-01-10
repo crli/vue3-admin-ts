@@ -2,12 +2,12 @@
  * @Author: crli
  * @Date: 2021-10-13 15:50:47
  * @LastEditors: crli
- * @LastEditTime: 2021-10-25 13:43:38
+ * @LastEditTime: 2021-12-29 13:56:20
  * @Description: file content
 -->
 <template>
   <div class="dashboard-container">
-    <!-- <div class="dashboard-text">name: {{ username }}</div> -->
+    <div class="dashboard-text">name: {{ username }}</div>
     <div style="height: 400px; display: flex" v-loading="chartloading">
       <chart idSelect="RAM" :option="RAMOption" style="width: 600px" @hideloading="chartloading = false"></chart>
     </div>

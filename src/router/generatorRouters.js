@@ -3,24 +3,29 @@
  */
 
 // import Layout from '@/layout'
-import RouteView from '@/layout/RouteView'
+// import RouteView from '@/layout/RouteView'
 // 前端路由表
 const constantRouterComponents = {
   // 基础页面 layout 必须引入
-  BasicLayout: import(/* webpackChunkName: "layout" */ '@/layout'),
-  RouteView: RouteView,
+  Layout: () => import(/* webpackChunkName: "Layout" */ '@/layout/Layout'),
   // 你需要动态引入的页面组件
   // 用户权限中心
   // errorlog: () => import(/* webpackChunkName: "errorlog" */ '@/views/error-log/index'),
   accountMgt: () => import(/* webpackChunkName: "accountMgt" */ '@/views/accountMgt/index'),
   tenantMgt: () => import(/* webpackChunkName: "tenantMgt" */ '@/views/tenantMgt/index'),
   resourceDir: () => import(/* webpackChunkName: "resourceDir" */ '@/views/resourceMgt/directory'),
-  resourceList: () => import(/* webpackChunkName: "resourceList" */ '@/views/resourceMgt/list')
+  resourceList: () => import(/* webpackChunkName: "resourceList" */ '@/views/resourceMgt/list'),
+  Menu1: () => import(/* webpackChunkName: "Menu1" */ '@/views/nested/menu1/index.vue'),
+  'Menu1-1': () => import(/* webpackChunkName: "Menu1-1" */ '@/views/nested/menu1/menu1-1/index.vue'),
+  'Menu1-2': () => import(/* webpackChunkName: "Menu1-2" */ '@/views/nested/menu1/menu1-2/index.vue'),
+  'Menu1-2-1': () => import(/* webpackChunkName: "Menu1-2-1" */ '@/views/nested/menu1/menu1-2/menu1-2-1/index.vue'),
+  'Menu1-2-2': () => import(/* webpackChunkName: "menu1-2-2" */ '@/views/nested/menu1/menu1-2/menu1-2-2/index.vue'),
+  Menu2: () => import(/* webpackChunkName: "Menu2" */ '@/views/nested/menu2/index.vue')
 }
 // 前端未找到页面路由（固定不用改）
 // eslint-disable-next-line
 const notFoundRouter = {
-  path: '*',
+  path: '/:pathMatch(.*)*',
   redirect: '/404',
   hidden: true
 }
@@ -35,8 +40,10 @@ export const generatorDynamicRouter = (menus) => {
   // 后端路由转树形
   listToTree(menus, menuNav, 'root') // 0
   // 生成路由目录结构
+  // console.log(menuNav)
   const routers = generator(menuNav)
   routers.push(notFoundRouter)
+  // console.log(routers, 222222)
   return routers
 }
 
@@ -52,8 +59,7 @@ const listToTree = (list, tree, parentId) => {
     if (item.parentId === parentId) {
       const child = {
         ...item,
-        key: item.key || item.code,
-        children: []
+        key: item.key || item.code
       }
       // 迭代 list， 找到当前菜单相符合的所有子菜单
       listToTree(list, child.children, item.menuId)
@@ -75,14 +81,16 @@ const listToTree = (list, tree, parentId) => {
  * @returns {*}
  */
 export const generator = (routerMap, parent) => {
+  // console.log(routerMap, 2222)
   // const currentRouterArray = ['addParameterSetting', 'addVersionInfo', 'updateVersionInfo']
   return routerMap.map((item) => {
-    const { title, icon, breadcrumb, activeMenu } = item.meta || {}
+    const { title, icon, breadcrumb, activeMenu, cachePage, leaveRmCachePage } = item.meta || {}
     const menuId = item.menuId
     const currentRouter = {
       // 如果路由设置了 path，则作为默认 path，否则 路由地址 动态拼接生成如 /dashboard/workplace
       path: item.url || `${(parent && parent.path) || ''}/${item.key}`,
       // 路由名称，建议唯一
+      alwaysShow: item.alwaysShow, //当设置 true 的时候永远会显示根菜单，不设置的情况下只有当子路由个数大于一个时才会显示根菜单
       name: item.code || item.key || '',
       // 该路由对应页面的 组件(动态加载)
       component: constantRouterComponents[item.component || item.key], // || (() => import(`@/views/${item.component}`)),
@@ -93,8 +101,10 @@ export const generator = (routerMap, parent) => {
         title: title,
         icon: icon || 'eye-open',
         roles: [item.code],
-        breadcrumb: breadcrumb || undefined,
-        activeMenu: activeMenu || undefined
+        breadcrumb: breadcrumb, //如果设置为false,则在面包屑导航中不会被显示(默认 true)
+        activeMenu: activeMenu || undefined, //如果设置，则sidebar会在选中时高亮设置的path
+        cachePage: cachePage, //如果设置为true,则不会被 <keep-alive> 缓存(默认 false)
+        leaveRmCachePage: leaveRmCachePage //如果设置为true,则会刪除  <keep-alive> 缓存(默认 true)
       }
     }
 

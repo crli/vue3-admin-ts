@@ -33,8 +33,6 @@ h6 {
   margin: 0;
   padding: 0;
 }
-span,
-output {
-  display: inline-block;
-  line-height: 1;
+.el-input-number__decrease, .el-input-number__increase{
+  top: 2px !important
 }

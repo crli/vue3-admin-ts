@@ -2,7 +2,7 @@
  * @Author: crli
  * @Date: 2020-07-20 15:15:50
  * @LastEditors: crli
- * @LastEditTime: 2021-10-25 13:41:39
+ * @LastEditTime: 2022-01-06 10:01:31
  * @Description: file content
 -->
 <template>
@@ -47,7 +47,7 @@ onMounted(() => {
 
 let seteditor = () => {
   editor.value = new E(`#${props.id}`)
-  console.log(editor.value)
+  // console.log(editor.value)
   let header = {}
   editor.value.config.uploadImgShowBase64 = false // base 64 存储图片
   editor.value.config.uploadImgServer = 'this.uphost' + '/xxx/operate/xxx' // 配置服务器端地址

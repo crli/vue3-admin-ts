@@ -1,3 +1,10 @@
+<!--
+ * @Author: crli
+ * @Date: 2021-12-15 11:02:20
+ * @LastEditors: crli
+ * @LastEditTime: 2022-01-06 13:42:36
+ * @Description: file content
+-->
 <template>
   <div style="padding: 0 12px" @click="toggleClick">
     <svg
@@ -15,9 +22,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { getCurrentInstance } from 'vue'
-let { proxy } = getCurrentInstance()
+const { proxy }: any = getCurrentInstance()
 defineProps({
   isActive: {
     type: Boolean,

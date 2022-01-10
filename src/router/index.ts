@@ -1,7 +1,6 @@
 import { createRouter, createWebHashHistory, Router } from 'vue-router'
 import Layout from '@/layout'
 import { RouterTy } from '@/types/router'
-import { ObjTy } from '@/types/common'
 export const constantRoutes: RouterTy = [
   {
     path: '/redirect/:path(.*)',
@@ -69,29 +68,49 @@ export const constantRoutes: RouterTy = [
 /**
  * 动态路由，需要配合用户权限动态加载的路由
  */
-export const asyncRoutes: RouterTy = [
-  {
-    path: '/dashboard',
-    component: () => import('@/views/dashboard/index.vue'),
-    name: 'Dashboard',
-    hidden: true,
-    meta: {
-      title: '首页',
-      icon: 'home',
-      affix: true
-    }
-  }
-]
+// export const asyncRoutes: RouterTy = [
+//   {
+//     path: '/',
+//     component: Layout,
+//     name: 'Dashboard',
+//     hidden: true,
+//     meta: {
+//       title: '首页',
+//       icon: 'home',
+//       affix: true
+//     },
+//     redirect: "/dashboard",
+//     children: [{
+//       path: '/dashboard',
+//       component: () => import('@/views/dashboard/index.vue'),
+//       children: []
+//     }]
+//   }
+// ]
 /**
  * 跟路由，带侧边栏、导航栏的主页面框架
  */
-export const rootRoute: ObjTy = {
-  name: 'index',
-  path: '/',
-  component: Layout,
-  redirect: '/dashboard',
-  children: []
-}
+export const rootRoute: RouterTy = [
+  {
+    name: 'Index',
+    path: '/',
+    component: Layout,
+    redirect: '/dashboard',
+    hidden: true,
+    children: [
+      {
+        path: '/dashboard',
+        name: 'Dashboard',
+        meta: {
+          title: '首页',
+          icon: 'home',
+          affix: true
+        },
+        component: () => import('@/views/dashboard/index.vue')
+      }
+    ]
+  }
+]
 
 const router: Router = createRouter({
   history: createWebHashHistory(),

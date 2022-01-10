@@ -1,13 +1,18 @@
+<!--
+ * @Author: crli
+ * @Date: 2021-12-15 11:02:20
+ * @LastEditors: crli
+ * @LastEditTime: 2022-01-06 15:01:31
+ * @Description: file content
+-->
 <template>
   <div :class="classObj" class="layout-wrapper">
     <!--left side-->
     <Sidebar class="sidebar-container" v-if="settings.showLeftMenu" />
     <!--right side-->
     <div class="main-container">
-      <div>
-        <Navbar />
-        <TagsView v-if="settings.needTagsView" />
-      </div>
+      <Navbar />
+      <TagsView v-if="settings.needTagsView" />
       <AppMain />
     </div>
     <!--<Settings />-->
@@ -24,7 +29,11 @@ export default {
 <script setup lang="ts">
 import { Sidebar, Navbar, AppMain, TagsView } from './components'
 import { getCurrentInstance, computed } from 'vue'
-import settings from '@/settings'
+import { useStore } from 'vuex'
+const store = useStore()
+const settings = computed(() => {
+  return store.state.app.settings
+})
 let { proxy }: any = getCurrentInstance()
 let opened = computed(() => {
   return proxy.$store.state.app.sidebar.opened
@@ -32,7 +41,7 @@ let opened = computed(() => {
 let classObj = computed(() => {
   return {
     closeSidebar: !opened.value,
-    hideSidebar: !settings.showLeftMenu
+    hideSidebar: !settings.value.showLeftMenu
   }
 })
 //import ResizeHook to   listen  page size that   open or close
@@ -41,12 +50,6 @@ ResizeHook()
 </script>
 
 <style lang="scss" scoped>
-.layout-wrapper {
-  overflow: hidden;
-  //display: flex;
-  //align-content: start;
-  //justify-content: start;
-}
 .main-container {
   min-height: 100%;
   transition: margin-left 0.28s;

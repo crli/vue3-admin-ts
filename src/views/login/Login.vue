@@ -4,12 +4,12 @@
       <div class="title-container">
         <h3 class="title text-center">{{ settings.title }}</h3>
       </div>
-      <el-form-item prop="username" :rules="formRulesMixin.isNotNull">
+      <el-form-item prop="account" :rules="formRulesMixin.isNotNull">
         <div class="rowSC">
           <span class="svg-container">
             <svg-icon icon-class="user" />
           </span>
-          <el-input v-model="formInline.username" placeholder="用户名(admin)" />
+          <el-input v-model="formInline.account" placeholder="用户名(admin)" />
           <!--占位-->
           <div class="show-pwd" />
         </div>
@@ -59,7 +59,7 @@ import { ObjTy } from '@/types/common'
 let { proxy }: any = getCurrentInstance()
 //form
 let formInline = reactive({
-  username: 'admin',
+  account: 'system',
   password: '123456'
 })
 let state: ObjTy = reactive({
@@ -108,13 +108,14 @@ let handleLogin = () => {
 let loginReq = () => {
   loading.value = true
   store
-    .dispatch('user/login', formInline)
+    .dispatch('user/login', { entity: formInline })
     .then(() => {
       ElMessage({ message: '登录成功', type: 'success' })
       proxy.$router.push({ path: state.redirect || '/', query: state.otherQuery })
     })
     .catch((res) => {
-      tipMessage.value = res.msg
+      console.log(res)
+      tipMessage.value = res.message
       proxy.sleepMixin(30).then(() => {
         loading.value = false
       })

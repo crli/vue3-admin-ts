@@ -2,7 +2,7 @@
  * @Author: crli
  * @Date: 2021-10-13 15:50:47
  * @LastEditors: crli
- * @LastEditTime: 2021-10-14 16:06:02
+ * @LastEditTime: 2022-01-06 10:52:25
  * @Description: file content
  */
 /*vuex ts*/
@@ -20,6 +20,7 @@ interface AppTy {
     //opened: Cookies.get('sidebarStatus') ? !!+Cookies.get('sidebarStatus') : true,
     // withoutAnimation: false
   }
+  settings: ObjTy
   device: 'desktop'
   cachedViews: Array<string>
 }

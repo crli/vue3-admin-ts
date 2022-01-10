@@ -7,10 +7,10 @@
         class="hamburger-container"
         @toggleClick="toggleSideBar"
       />
-      <breadcrumb class="breadcrumb-container" />
+      <breadcrumb class="breadcrumb-container" v-if="settings.showHamburger" />
     </div>
     <!--nav title-->
-    <div class="heardCenterTitle" v-if="settings.showTitle">{{ settings.showTitle }}</div>
+    <div class="heardCenterTitle" v-if="settings.showTitle">{{ settings.showTitle }}111</div>
     <div class="right-menu" v-if="settings.ShowDropDown">
       <el-dropdown trigger="click" size="medium">
         <div class="avatar-wrapper">
@@ -23,7 +23,7 @@
               <el-dropdown-item>首页</el-dropdown-item>
             </router-link>
             <el-dropdown-item>修改密码</el-dropdown-item>
-            <el-dropdown-item divided @click="loginOut">login out</el-dropdown-item>
+            <el-dropdown-item divided @click="loginOut">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -34,27 +34,30 @@
 <script setup lang="ts">
 import Breadcrumb from './Breadcrumb'
 import Hamburger from './Hamburger'
-import { computed, getCurrentInstance } from 'vue'
-import settings from '@/settings'
+import { computed } from 'vue'
 import { useStore } from 'vuex'
-import { ElMessage } from 'element-plus'
-let { proxy }: any = getCurrentInstance()
-
+// import { ElMessage } from 'element-plus'
+// let { proxy }: any = getCurrentInstance()
+const store = useStore()
+const settings = computed(() => {
+  return store.state.app.settings
+})
 const opened = computed(() => {
-  return proxy.$store.state.app.sidebar.opened
+  return store.state.app.sidebar.opened
 })
 const toggleSideBar = () => {
-  proxy.$store.commit('app/SIDEBAR_TOGGLE')
+  store.commit('app/SIDEBAR_TOGGLE')
 }
 
 /*
  * 退出登录
  * */
-const store = useStore()
 const loginOut = () => {
   store.dispatch('user/logout').then(() => {
-    ElMessage({ message: '退出登录成功', type: 'success' })
-    proxy.$router.push(`/login?redirect=${proxy.$route.fullPath}`)
+    // ElMessage({ message: '退出登录成功', type: 'success' })
+    // proxy.$router.push(`/login?redirect=${proxy.$route.fullPath}`)
+    //此处reload清空路由和重置部分状态,避免路由权限错误
+    location.reload()
   })
 }
 </script>

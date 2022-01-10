@@ -2,32 +2,57 @@
  * @Author: crli
  * @Date: 2021-10-15 17:04:52
  * @LastEditors: crli
- * @LastEditTime: 2021-10-22 16:15:40
+ * @LastEditTime: 2022-01-07 09:45:57
  * @Description: file content
 -->
 <template>
-  <router-view v-slot="{ Component }">
-    <transition name="fade-transform" mode="out-in">
-      <div class="app-main" :class="{ 'show-tag-view': setting.needTagsView }" :key="key">
+  <div class="app-main" :class="{ 'show-tag-view': settings.needTagsView }">
+    <router-view v-slot="{ Component }">
+      <!--has transition  Judging by settings.mainNeedAnimation-->
+      <transition v-if="settings.mainNeedAnimation" name="fade-transform" mode="out-in">
         <keep-alive :include="cachedViews">
           <component :is="Component" :key="key" />
         </keep-alive>
-      </div>
-    </transition>
-  </router-view>
+      </transition>
+      <!-- no transition -->
+      <keep-alive v-else :include="cachedViews">
+        <component :is="Component" :key="key" />
+      </keep-alive>
+    </router-view>
+  </div>
 </template>
 
 <script setup lang="ts">
-import setting from '@/settings'
-
-import { getCurrentInstance, computed } from 'vue'
-let { proxy }: any = getCurrentInstance()
-
-const key = computed(() => {
-  return proxy.$route.path
+import settings from '@/settings'
+import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
+import { computed } from 'vue'
+import { ObjTy } from '@/types/common'
+const store = useStore()
+const route = useRoute()
+// cachePage: is true, keep-alive this Page
+// leaveRmCachePage: is true, keep-alive remote when page leave
+let oldRoute: ObjTy = {}
+const key = computed({
+  get() {
+    if (oldRoute?.name) {
+      if (oldRoute.meta?.leaveRmCachePage && oldRoute.meta?.cachePage) {
+        store.commit('app/DEL_CACHED_VIEW', oldRoute.name)
+      }
+    }
+    if (route.name) {
+      if (route.meta?.cachePage) {
+        store.commit('app/ADD_CACHED_VIEW', route.name)
+      }
+    }
+    oldRoute = JSON.parse(JSON.stringify({ name: route.name, meta: route.meta }))
+    return route.path
+  },
+  set() {}
 })
+
 const cachedViews = computed(() => {
-  return proxy.$store.state.tagsView.cachedViews
+  return store.state.app.cachedViews
 })
 </script>
 

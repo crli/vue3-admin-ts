@@ -2,7 +2,7 @@
  * @Author: crli
  * @Date: 2021-10-13 15:50:46
  * @LastEditors: crli
- * @LastEditTime: 2021-11-23 16:07:44
+ * @LastEditTime: 2022-01-10 09:39:51
  * @Description: file content
  */
 import path, { resolve } from 'path'
@@ -32,7 +32,7 @@ export default ({ command, mode }: any) => {
       proxy: {
         // 类型： Record<string, string | ProxyOp 为开发服务器配置自定义代理规则
         [loadEnv(mode, process.cwd()).VITE_APP_BASE_URL]: {
-          target: 'http://172.22.22.222:2222/manager',
+          target: 'http://172.24.24.54:2228',
           changeOrigin: true,
           rewrite: (path) => path.replace(new RegExp('^' + loadEnv(mode, process.cwd()).VITE_APP_BASE_URL), '')
         },

@@ -2,36 +2,48 @@
  * @Author: crli
  * @Date: 2021-10-15 09:27:35
  * @LastEditors: crli
- * @LastEditTime: 2021-12-20 13:34:29
- * @Description: 账号管理
+ * @LastEditTime: 2022-01-10 10:16:13
+ * @Description: XXX
 -->
 <template>
   <div class="container">
     <el-card class="box-card" shadow="never">
       <template #header>
         <div class="card-header">
-          <el-form :inline="true" :model="listQuery">
+          <el-form :inline="true" :model="state.listQuery">
             <el-row :gutter="10">
               <el-col :md="6" :xs="24" :offset="0">
                 <el-form-item label="账户名：">
-                  <el-input size="small" v-model="listQuery.account" placeholder="请输入账户名" clearable></el-input>
+                  <el-input
+                    size="small"
+                    v-model="state.listQuery.account"
+                    placeholder="请输入账户名"
+                    clearable
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :md="6" :xs="24" :offset="0">
                 <el-form-item label="账号：">
-                  <el-input size="small" v-model="listQuery.accountName" placeholder="请输入账号" clearable></el-input>
+                  <el-input
+                    size="small"
+                    v-model="state.listQuery.accountName"
+                    placeholder="请输入账号"
+                    clearable
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :md="6" :xs="24" :offset="0">
                 <el-form-item label="类型：">
-                  <el-select size="small" clearable v-model="listQuery.accountType" placeholder="请选择类型">
+                  <el-select size="small" clearable v-model="state.listQuery.accountType" placeholder="请选择类型">
                     <el-option v-for="item in typeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
                   </el-select>
                 </el-form-item>
               </el-col>
               <el-col :md="6" :xs="24" :offset="0">
                 <el-form-item>
-                  <el-button size="small" type="primary" @click="getList">查询</el-button>
+                  <el-button size="small" type="primary" v-action:btn_edit111>权限按钮隐藏</el-button>
+                  <el-button size="small" type="primary" v-action:btn_edit>权限按钮显示</el-button>
+                  <el-button size="small" type="primary" @click="getList" >查询</el-button>
                   <el-button size="small" type="primary" @click="addAccount">添加账号</el-button>
                 </el-form-item>
               </el-col>
@@ -39,47 +51,45 @@
           </el-form>
         </div>
       </template>
-      <el-table :data="tableData" border style="width: 100%">
+      <el-table :data="tableData" border style="width: 100%" v-loading="state.loading">
         <el-table-column prop="account" label="账户名"></el-table-column>
         <el-table-column prop="accountName" label="账号"></el-table-column>
         <el-table-column label="状态">
           <template #default="scope">
-            <el-tag v-if="scope.row.state === '1'" type="danger" size="medium">锁定</el-tag>
+            <el-tag v-if="scope.row.accountStatus === '1'" type="danger" size="medium">锁定</el-tag>
             <el-tag v-else type="success" size="medium">正常</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="accountType" label="类型">
           <template #default="scope">
-            <span v-if="scope.row.state === '0'">dedededede</span>
-            <span v-else-if="scope.row.state === '1'">eeeeeeeeeeeeeee</span>
-            <span v-else>dededededededeeeeeeeeee</span>
+            <span v-if="scope.row.accountType === '0'">AAA</span>
+            <span v-else-if="scope.row.accountType === '1'">BBB</span>
+            <span v-else>CCC</span>
           </template>
         </el-table-column>
-        <el-table-column prop="createTime" label="创建时间"></el-table-column>
-        <el-table-column prop="lastTime" label="最后操作时间"></el-table-column>
-        <el-table-column prop="user" label="操作人"></el-table-column>
+        <el-table-column prop="createTime" label="创建时间">
+          <template #default="scope">{{ timeformat(scope.row.createdTime) }}</template>
+        </el-table-column>
+        <el-table-column prop="updatedTime" label="最后操作时间">
+          <template #default="scope">{{ timeformat(scope.row.updatedTime) }}</template>
+        </el-table-column>
+        <el-table-column prop="operatorName" label="操作人"></el-table-column>
         <el-table-column label="操作" width="300">
           <template #default="scope">
-            <el-button type="primary" plain size="small" @click="handleEdit(scope.row.id)">编辑</el-button>
-            <el-button type="danger" plain size="small" @click="handleDelete(scope.row.id)">删除</el-button>
-            <el-button type="primary" plain size="small" @click="lock(scope.row.id)">锁定</el-button>
-
-            <el-button type="primary" v-if="scope.row.state === '2'" size="small" @click="resetPassword(scope.row.id)">
-              重置密码
-            </el-button>
-            <el-button type="primary" v-else plain size="small" @click="showDiolog(scope.row.id)">重置密码</el-button>
+            <el-button type="primary" size="small" @click="handleEdit(scope.row.id)">编辑</el-button>
+            <el-button type="danger" size="small" @click="handleDelete(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
       <pagination
         :hidden="!Boolean(total)"
         :total="total"
-        v-model:page="listQuery.pageNum"
-        v-model:limit="listQuery.pageSize"
+        v-model:page="state.pageQuery.pageNum"
+        v-model:limit="state.pageQuery.pageSize"
         :auto-scroll="false"
         @pagination="getList"
       />
-      <addOrEdit v-model="visible" :id="id"></addOrEdit>
+      <addOrEdit :id="id" @close="getList" ref="refaddOrEdit"></addOrEdit>
     </el-card>
   </div>
 </template>
@@ -91,139 +101,94 @@ export default {
 <script setup lang="ts">
 import { onMounted, getCurrentInstance, ref, reactive } from 'vue'
 import addOrEdit from './components/addOrEdit'
+import { queryAccountList, deleteAccount } from '@/api/accountMgt'
+import { ElMessage, ElMessageBox } from 'element-plus'
 let { proxy }: any = getCurrentInstance()
-
+import { ObjTy } from '@/types/common'
 //响应式数据、props、emit 定义
-let listQuery = reactive({
-  account: '',
-  accountName: '',
-  accountType: '',
-  pageNum: 1,
-  pageSize: 10
+const state = reactive({
+  listQuery: {
+    account: '',
+    accountName: '',
+    accountType: ''
+  },
+  pageQuery: {
+    pageNum: 1,
+    pageSize: 10
+  },
+  loading: false
 })
+
 let typeList = [
   {
-    name: 'dedededede',
-    id: 0
+    name: 'AAA',
+    id: '0'
   },
   {
-    name: 'eeeeeeeeeeeeeee',
-    id: 1
+    name: 'BBB',
+    id: '1'
   },
   {
-    name: 'dededededededeeeeeeeeee',
-    id: 2
+    name: 'CCC',
+    id: '2'
   }
 ]
 let total = ref(100)
 let tableData: any = ref([])
-let visible = ref(false)
-let passwordVisible = ref(false)
 let id = ref('')
+let refaddOrEdit: any = ref(null)
+
 //生命周期以及 watch computed书写
 onMounted(() => {
   console.log(proxy)
-  tableData.value = [
-    {
-      operatorId: null,
-      id: 'f519ece775ab4d63a2874b77de89594e',
-      accountLoginId: null,
-      accountId: null,
-      loginType: null,
-      account: 'app25395781',
-      password: null,
-      lastLoginTime: null,
-      accountType: '2',
-      accountTypeName: '应用dededededededeeeeeeeeee',
-      accountName: '测试应用1_测试网关_20210713',
-      accountStatus: '0',
-      accountStatusName: '正常',
-      tenantId: '10001',
-      applicationId: '20001',
-      gatewayId: '30001',
-      lockId: null,
-      termOfValidity: null,
-      mobile: null,
-      email: null,
-      operatorName: null,
-      applicationStatus: null,
-      tenantStatus: null,
-      createdTime: null,
-      updatedTime: null
-    },
-    {
-      operatorId: null,
-      id: '2f1582a29c324660ac2aaa94e04e8988',
-      accountLoginId: null,
-      accountId: null,
-      loginType: null,
-      account: 'app74622218',
-      password: null,
-      lastLoginTime: null,
-      accountType: '2',
-      accountTypeName: '应用dededededededeeeeeeeeee',
-      accountName: '测试应用1_测试网关_20210713',
-      accountStatus: '0',
-      accountStatusName: '正常',
-      tenantId: '10001',
-      applicationId: '20001',
-      gatewayId: '30001',
-      lockId: null,
-      termOfValidity: null,
-      mobile: null,
-      email: null,
-      operatorName: null,
-      applicationStatus: null,
-      tenantStatus: null,
-      createdTime: null,
-      updatedTime: null
-    },
-    {
-      operatorId: null,
-      id: '6aeb55acaedd44edb9dcd36d3515ebc2',
-      accountLoginId: null,
-      accountId: null,
-      loginType: null,
-      account: 'app56172455',
-      password: null,
-      lastLoginTime: null,
-      accountType: '2',
-      accountTypeName: '应用dededededededeeeeeeeeee',
-      accountName: '测试应用1_测试网关_20210713',
-      accountStatus: '0',
-      accountStatusName: '正常',
-      tenantId: '10001',
-      applicationId: '20001',
-      gatewayId: '30001',
-      lockId: null,
-      termOfValidity: null,
-      mobile: null,
-      email: null,
-      operatorName: null,
-      applicationStatus: null,
-      tenantStatus: null,
-      createdTime: null,
-      updatedTime: null
-    }
-  ]
+  getList()
 })
 
 //方法定义
 
-let getList = () => {}
+let getList = () => {
+  state.loading = true
+  queryAccountList({
+    entity: state.listQuery,
+    ...state.pageQuery
+  }).then((res: ObjTy) => {
+    tableData.value = res.result.list
+    total.value = res.result.total
+    state.loading = false
+  })
+}
 let handleEdit = (v: string) => {
   id.value = v
-  visible.value = true
+  refaddOrEdit.value.visible = true
 }
-let handleDelete = (v: string) => {}
-let lock = (v: string) => {}
-let resetPassword = (v: string) => {}
+let handleDelete = (v: string) => {
+  ElMessageBox.confirm('确认删除？', '提示', {
+    confirmButtonText: 'OK',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(() => {
+      deleteAccount({
+        entity: {
+          accountId: v
+        }
+      }).then((res: ObjTy) => {
+        if (res.status === '200') {
+          ElMessage({ message: `删除成功`, type: 'success' })
+          getList()
+        }
+      })
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '已取消'
+      })
+    })
+}
 let addAccount = () => {
-  visible.value = true
-}
-let showDiolog = (v: string) => {
-  id.value = v
-  passwordVisible.value = true
+  id.value = ''
+  refaddOrEdit.value.visible = true
 }
 </script>
 

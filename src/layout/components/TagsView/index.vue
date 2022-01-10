@@ -172,12 +172,10 @@ const addTags = () => {
 // }
 
 const refreshSelectedTag = (view: RouteItemTy) => {
-  store.dispatch('tagsView/delCachedView', view).then(() => {
-    const { fullPath } = view
-    proxy.$nextTick(() => {
-      proxy.$router.replace({
-        path: '/redirect' + fullPath
-      })
+  const { fullPath } = view
+  proxy.$nextTick(() => {
+    proxy.$router.replace({
+      path: '/redirect' + fullPath
     })
   })
 }

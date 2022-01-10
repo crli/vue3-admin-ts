@@ -1,3 +1,10 @@
+/*
+ * @Author: crli
+ * @Date: 2021-12-15 11:02:19
+ * @LastEditors: crli
+ * @LastEditTime: 2022-01-10 10:15:09
+ * @Description: file content
+ */
 interface settingTy {
   title: string
   fixedHeader: boolean
@@ -8,6 +15,7 @@ interface settingTy {
   showHamburger: boolean
   isNeedLogin: boolean
   isNeedNprogress: boolean
+  mainNeedAnimation: boolean
   needTagsView: boolean
   tagsViewNum: number
   openProdMock: boolean
@@ -15,7 +23,7 @@ interface settingTy {
 }
 
 const setting: settingTy = {
-  title: 'Vue3 Admin Ts',
+  title: 'VUE3-ADMIN-TS',
   /**
    * @type {boolean} true | false
    * @description Whether fix the header
@@ -47,7 +55,12 @@ const setting: settingTy = {
    * @description Whether need login
    */
   isNeedLogin: true,
-
+  /* page  animation related*/
+  /**
+   * @type {boolean} true | false
+   * @description Whether need animation of main area
+   */
+  mainNeedAnimation: true,
   /**
    * @type {boolean} true | false
    * @description Whether need nprogress

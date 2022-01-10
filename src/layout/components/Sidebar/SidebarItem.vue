@@ -32,7 +32,7 @@ import Item from './Item'
 import { isExternal } from '@/utils/validate'
 import path from 'path'
 import { RouteItemTy } from '@/types/router'
-let { proxy }: any = getCurrentInstance()
+const { proxy }: any = getCurrentInstance()
 defineProps({
   //每一个router Item
   item: {
@@ -56,7 +56,7 @@ onMounted(() => {
 })
 //显示sidebarItem 的情况
 proxy.onlyOneChild = null
-let showSidebarItem = (children = [], parent: RouteItemTy) => {
+const showSidebarItem = (children = [], parent: RouteItemTy) => {
   const showingChildren = children.filter((item: RouteItemTy) => {
     if (item.hidden) {
       return false

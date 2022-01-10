@@ -2,11 +2,11 @@
  * @Author: crli
  * @Date: 2021-10-15 17:04:52
  * @LastEditors: crli
- * @LastEditTime: 2021-10-20 10:26:06
+ * @LastEditTime: 2022-01-06 09:48:54
  * @Description: file content
  */
 import { generatorDynamicRouter } from '@/router/generatorRouters.js'
-import { asyncRoutes, constantRoutes, rootRoute } from '@/router'
+import { constantRoutes, rootRoute } from '@/router'
 import { RouterTy } from '@/types/router'
 import { PermissionTy } from '@/types/store'
 import { ObjTy } from '@/types/common'
@@ -23,20 +23,15 @@ const mutations = {
 const actions = {
   generateRoutes({ commit, rootState }: ObjTy) {
     return new Promise((resolve) => {
-      const routers = []
       // 动态后端路由
       // 取用户信息接口返回来的菜单进行处理
       const dynamicRouter = generatorDynamicRouter(rootState.user.menus) || []
+      // console.log(dynamicRouter, 11111)
+      const mergeRouter = rootRoute.concat(dynamicRouter)
+      // console.log('routers', mergeRouter)
 
-      const mergeRouter = asyncRoutes.concat(dynamicRouter)
-
-      rootRoute.children = mergeRouter
-      routers.push(rootRoute)
-
-      // console.log('routers', routers)
-
-      commit('SET_ROUTES', routers)
-      resolve(routers)
+      commit('SET_ROUTES', mergeRouter)
+      resolve(mergeRouter)
     })
   }
 }

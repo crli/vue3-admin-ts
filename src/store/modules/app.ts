@@ -2,11 +2,12 @@
  * @Author: crli
  * @Date: 2021-10-13 15:50:47
  * @LastEditors: crli
- * @LastEditTime: 2021-10-14 16:09:04
+ * @LastEditTime: 2022-01-06 10:52:48
  * @Description: file content
  */
 import { ObjTy } from '@/types/common'
 import { AppTy } from '@/types/store'
+import defaultSettings from '@/settings'
 const state: AppTy = {
   sidebar: {
     opened: true
@@ -14,6 +15,7 @@ const state: AppTy = {
     // withoutAnimation: false
   },
   device: 'desktop',
+  settings: defaultSettings,
   cachedViews: []
 }
 

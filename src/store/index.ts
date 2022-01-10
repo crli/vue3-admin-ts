@@ -1,3 +1,10 @@
+/*
+ * @Author: crli
+ * @Date: 2021-12-15 11:02:20
+ * @LastEditors: crli
+ * @LastEditTime: 2022-01-06 09:59:31
+ * @Description: file content
+ */
 import { createStore } from 'vuex'
 import getters from './getters'
 import { ObjTy } from '@/types/common'
@@ -8,7 +15,7 @@ for (const path in modulesFiles) {
   const moduleName = path.replace(/(.*\/)*([^.]+).*/gi, '$2')
   modules[moduleName] = modulesFiles[path].default
 }
-console.log('modules', modules)
+
 //复杂的方式
 // const modulesFiles = import.meta.globEager('./modules/*.js')
 // console.log(Object.keys(modulesFiles));

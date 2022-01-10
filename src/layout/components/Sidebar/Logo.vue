@@ -2,7 +2,7 @@
  * @Author: crli
  * @Date: 2021-10-15 17:04:52
  * @LastEditors: crli
- * @LastEditTime: 2021-10-18 11:06:46
+ * @LastEditTime: 2022-01-06 10:45:15
  * @Description: file content
 -->
 <template>
@@ -31,7 +31,7 @@ defineProps({
 })
 const state = reactive({
   title: setting.title,
-  logo: ''
+  logo: 'xxxx'
 })
 //export to page for
 let { title, logo } = toRefs(state)

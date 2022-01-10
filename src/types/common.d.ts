@@ -2,7 +2,7 @@
  * @Author: crli
  * @Date: 2021-10-13 15:50:47
  * @LastEditors: crli
- * @LastEditTime: 2021-10-20 10:15:35
+ * @LastEditTime: 2022-01-07 10:43:08
  * @Description: file content
  */
 /*类型命名建议以Ty结尾*/
@@ -43,4 +43,7 @@ interface AxiosConfigTy {
   isAlertErrorMsg?: boolean
   baseURL?: string
   timeout?: number
+}
+interface ValidatorTy {
+  (rule: any, value: string, callback: (arg0?: Error)=>void) : void
 }

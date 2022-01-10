@@ -7,7 +7,7 @@ let requestData: any
 let loadingE: any
 
 const service: any = axios.create({
-  baseURL: '',
+  baseURL: ''
   // timeout: 30000 // 超时时间
 })
 // 请求拦截
@@ -15,7 +15,7 @@ service.interceptors.request.use(
   (request: AxiosReqTy) => {
     // console.log('request', request)
     // token配置
-    request.headers['AUTHORIZE_TOKEN'] = getToken()
+    request.headers['Authorization'] = getToken()
     /* 下载文件*/
     if (request.isDownLoadFile) {
       request.responseType = 'blob'
@@ -57,21 +57,21 @@ service.interceptors.response.use(
     if (requestData.isDownLoadFile) {
       return res.data
     }
-    const { flag, msg, isNeedUpdateToken, updateToken } = res.data
+    const { status, message, isNeedUpdateToken, updateToken } = res.data
     //更新token保持登录状态
     if (isNeedUpdateToken) {
       setToken(updateToken)
     }
-    if (flag) {
+    if (status === '200') {
       return res.data
     } else {
       if (requestData.isAlertErrorMsg) {
         ElMessage({
-          message: msg,
+          message: message,
           type: 'error',
           duration: 2 * 1000
         })
-        return Promise.reject(msg)
+        return Promise.reject(message)
       } else {
         return res.data
       }
@@ -117,7 +117,7 @@ export default function khReqMethod({
   afHLoading,
   isUploadFile,
   isDownLoadFile,
-  baseURL,
+  // baseURL,
   timeout,
   isAlertErrorMsg = true
 }: AxiosConfigTy): any {
@@ -131,7 +131,7 @@ export default function khReqMethod({
     isUploadFile: isUploadFile ?? false,
     isDownLoadFile: isDownLoadFile ?? false,
     isAlertErrorMsg: isAlertErrorMsg,
-    baseURL: '',
+    // baseURL: '',
     timeout: timeout ?? 15000
   })
 }

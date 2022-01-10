@@ -2,7 +2,7 @@
  * @Author: crli
  * @Date: 2021-10-13 15:50:47
  * @LastEditors: crli
- * @LastEditTime: 2021-10-15 17:02:15
+ * @LastEditTime: 2022-01-07 09:53:47
  * @Description: file content
 -->
 <template>
@@ -13,9 +13,9 @@
 
 <script setup lang="ts">
 import { isExternal } from '@/utils/validate'
-import { onMounted, computed, getCurrentInstance, reactive } from 'vue'
+import { onMounted, computed, getCurrentInstance } from 'vue'
 let { proxy }: any = getCurrentInstance()
-const props = defineProps({
+defineProps({
   to: {
     type: String,
     required: true
@@ -42,13 +42,7 @@ const linkProps = (to: string) => {
     to: to
   }
 }
-const state = reactive({
-  levelList: null
-})
-onMounted(() => {
-  console.log(state.levelList)
-  console.log(props.to)
-})
+onMounted(() => {})
 </script>
 
 <style scoped lang="scss"></style>

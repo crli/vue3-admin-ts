@@ -2,7 +2,7 @@
  * @Author: crli
  * @Date: 2021-10-13 15:50:46
  * @LastEditors: crli
- * @LastEditTime: 2021-10-15 15:23:16
+ * @LastEditTime: 2022-01-06 16:16:45
  * @Description: file content
  */
 /*
@@ -24,6 +24,7 @@ import { RouteRecordRaw } from 'vue-router'
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 const whiteList = ['/login', '/forgetPassword', '/emailValidation', '/messageValidation'] // no redirect whitelist
 const defaultRoutePath = '/dashboard'
+
 router.beforeEach(async (to: ObjTy, from: ObjTy, next: any) => {
   NProgress.start()
   /*
@@ -52,11 +53,17 @@ router.beforeEach(async (to: ObjTy, from: ObjTy, next: any) => {
           // generate accessible routes map based on roles
           // debugger
           const accessRoutes = await store.dispatch('permission/generateRoutes')
+          // console.log(accessRoutes)
           // dynamically add accessible routes
-          accessRoutes.forEach((route: RouteRecordRaw) => router.addRoute(route))
-          console.log(router)
-          const toPath = { ...to }
+          // debugger
+          accessRoutes.forEach(async (route: RouteRecordRaw) => {
+            // console.log(route)
+            // debugger
 
+            await router.addRoute(route)
+          })
+          // debugger
+          const toPath = { ...to }
           // console.log(toPath)
           if (toPath.path === '/') {
             // console.log(123)
@@ -69,6 +76,7 @@ router.beforeEach(async (to: ObjTy, from: ObjTy, next: any) => {
           //replace: true只是一个设置信息，告诉VUE本次操作后，不能通过浏览器后退按钮，返回前一个路由。=
           //vue3.0中addRoutes被销毁了
         } catch (err) {
+          // debugger
           await store.dispatch('user/resetToken')
           ElMessage.error(err || 'Has Error')
           next(`/login?redirect=${to.path}`)
